@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">AndroidThreadsDemo</string>
+    <string name="uithread">UI Thread</string>
+    <string name="javathread">Java Thread Crashing</string>
+    <string name="javathreadcorrect">Java Thread</string>
+    <string name="futuretask">Java Future Task</string>
+    <string name="asynctask">Android Async Task</string>
 </resources>
