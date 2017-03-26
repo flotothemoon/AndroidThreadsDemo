@@ -1,8 +1,17 @@
 package at.wels.htl.a5ahit.androidthreadsdemo;
 
+import android.app.ActivityManager;
+import android.app.IntentService;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.TextView;
+
+import org.w3c.dom.Text;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executor;
@@ -10,6 +19,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.FutureTask;
 
+import at.wels.htl.a5ahit.androidthreadsdemo.intentservices.BackgroundService;
 import at.wels.htl.a5ahit.androidthreadsdemo.threading.CorrectPrimeThread;
 import at.wels.htl.a5ahit.androidthreadsdemo.threading.PrimeAsyncTask;
 import at.wels.htl.a5ahit.androidthreadsdemo.threading.PrimeFutureTask;
@@ -22,13 +32,24 @@ public class MainActivity extends AppCompatActivity {
 
     private ExecutorService fredPool = Executors.newCachedThreadPool();
 
+    private TextView backgroundTicks;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        backgroundTicks = (TextView)findViewById(R.id.background);
+    }
 
-//
-//        new PrimeThread(MIN_PRIME).start();
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        // start background operator on start
+        if (!isServiceRunning(BackgroundService.class)) {
+            Intent service = new Intent(this, BackgroundService.class);
+            this.startService(service);
+        }
     }
 
     public void uiThread(View view) {
@@ -49,5 +70,15 @@ public class MainActivity extends AppCompatActivity {
 
     public void asyncTask(View view) {
         new PrimeAsyncTask(getApplicationContext()).execute(MIN_PRIME);
+    }
+
+    private boolean isServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
     }
 }
