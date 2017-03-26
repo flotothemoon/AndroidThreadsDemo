@@ -17,11 +17,11 @@ public final class PrimeUtils {
         return true;
     }
 
-    public static void FindNextPrime(long minPrime) {
-        FindNextPrime(minPrime, null);
+    public static long FindNextPrime(long minPrime) {
+        return FindNextPrime(minPrime, null);
     }
 
-    public static void FindNextPrime(long minPrime, PrimeTester tester) {
+    public static long FindNextPrime(long minPrime, PrimeTester tester) {
         for (long prime = minPrime; ; prime++) {
             Log.w("PrimeThread", "Checking: " + prime);
 
@@ -31,7 +31,7 @@ public final class PrimeUtils {
 
             if (isPrime(prime)) {
                 Log.w("PrimeThread", prime + " is a prime that is at least " + minPrime);
-                break;
+                return prime;
             }
 
             SystemClock.sleep(1000);
