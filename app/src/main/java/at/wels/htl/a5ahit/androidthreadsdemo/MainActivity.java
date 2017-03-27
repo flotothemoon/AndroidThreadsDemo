@@ -92,4 +92,10 @@ public class MainActivity extends AppCompatActivity {
     public void setTicks(int ticks) {
         backgroundTicks.setText("" + ticks);
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        BackgroundService.Activity = null;
+    }
 }
