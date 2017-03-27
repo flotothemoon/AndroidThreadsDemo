@@ -43,9 +43,4 @@ public class PrimeAsyncTask extends AsyncTask<Long, Long, Void> {
             Toast.makeText(mContext, "Testing " + values[i], Toast.LENGTH_SHORT).show();
         }
     }
-
-    @Override
-    protected void onPostExecute(Void aVoid) {
-        super.onPostExecute(aVoid);
-    }
 }

@@ -1,26 +1,17 @@
 package at.wels.htl.a5ahit.androidthreadsdemo;
 
-import android.app.ActivityManager;
-import android.app.IntentService;
 import android.app.job.JobInfo;
 import android.app.job.JobScheduler;
-import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
-
-import java.util.concurrent.Callable;
-import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.FutureTask;
 
 import at.wels.htl.a5ahit.androidthreadsdemo.intentservices.BackgroundService;
 import at.wels.htl.a5ahit.androidthreadsdemo.services.JobSchedulerService;

@@ -17,11 +17,6 @@ public class BackgroundService extends Service {
     public static MainActivity Activity;
     public static boolean Running = false;
 
-    @Override
-    public void onCreate() {
-        super.onCreate();
-    }
-
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
