@@ -2,7 +2,6 @@ package at.wels.htl.a5ahit.androidthreadsdemo.threading;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
 import android.widget.Toast;
 
 import static at.wels.htl.a5ahit.androidthreadsdemo.threading.PrimeUtils.FindNextPrime;

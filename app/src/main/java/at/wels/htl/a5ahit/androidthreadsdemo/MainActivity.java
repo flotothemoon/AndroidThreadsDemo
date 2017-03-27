@@ -2,7 +2,10 @@ package at.wels.htl.a5ahit.androidthreadsdemo;
 
 import android.app.ActivityManager;
 import android.app.IntentService;
+import android.app.job.JobInfo;
+import android.app.job.JobScheduler;
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -20,6 +23,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.FutureTask;
 
 import at.wels.htl.a5ahit.androidthreadsdemo.intentservices.BackgroundService;
+import at.wels.htl.a5ahit.androidthreadsdemo.services.JobSchedulerService;
 import at.wels.htl.a5ahit.androidthreadsdemo.threading.CorrectPrimeThread;
 import at.wels.htl.a5ahit.androidthreadsdemo.threading.PrimeAsyncTask;
 import at.wels.htl.a5ahit.androidthreadsdemo.threading.PrimeFutureTask;
@@ -27,7 +31,6 @@ import at.wels.htl.a5ahit.androidthreadsdemo.threading.PrimeThread;
 import at.wels.htl.a5ahit.androidthreadsdemo.threading.PrimeUtils;
 
 public class MainActivity extends AppCompatActivity {
-
     public static final long MIN_PRIME = 8;
 
     private ExecutorService fredPool = Executors.newCachedThreadPool();
@@ -38,7 +41,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        backgroundTicks = (TextView)findViewById(R.id.background);
+
+        backgroundTicks = (TextView) findViewById(R.id.background);
+
+        scheduleJob(this, JobSchedulerService.class, 0);
     }
 
     @Override
@@ -46,10 +52,21 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
 
         // start background operator on start
-        if (!isServiceRunning(BackgroundService.class)) {
+        if (!BackgroundService.Running) {
             Intent service = new Intent(this, BackgroundService.class);
             this.startService(service);
         }
+        BackgroundService.Activity = this;
+    }
+
+    private static void scheduleJob(Context context, Class jobClass, int jobID) {
+        JobScheduler js = (JobScheduler) context.getSystemService(Context.JOB_SCHEDULER_SERVICE);
+        JobInfo job = new JobInfo.Builder(jobID,
+                new ComponentName(context, jobClass))
+                .setRequiredNetworkType(JobInfo.NETWORK_TYPE_NOT_ROAMING)
+                .build();
+
+        js.schedule(job);
     }
 
     public void uiThread(View view) {
@@ -72,13 +89,7 @@ public class MainActivity extends AppCompatActivity {
         new PrimeAsyncTask(getApplicationContext()).execute(MIN_PRIME);
     }
 
-    private boolean isServiceRunning(Class<?> serviceClass) {
-        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
-        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
-            if (serviceClass.getName().equals(service.service.getClassName())) {
-                return true;
-            }
-        }
-        return false;
+    public void setTicks(int ticks) {
+        backgroundTicks.setText("" + ticks);
     }
 }

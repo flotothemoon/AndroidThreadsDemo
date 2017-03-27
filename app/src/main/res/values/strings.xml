@@ -5,4 +5,5 @@
     <string name="javathreadcorrect">Java Thread</string>
     <string name="futuretask">Java Future Task</string>
     <string name="asynctask">Android Async Task</string>
+    <string name="syncing">syncing...</string>
 </resources>
