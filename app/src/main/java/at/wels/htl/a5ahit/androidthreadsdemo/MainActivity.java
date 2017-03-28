@@ -1,5 +1,6 @@
 package at.wels.htl.a5ahit.androidthreadsdemo;
 
+import android.app.ActivityManager;
 import android.app.job.JobInfo;
 import android.app.job.JobScheduler;
 import android.content.ComponentName;
@@ -7,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -43,18 +45,28 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
 
         // start background operator on start
-        if (!BackgroundService.Running) {
+        if (!isServiceRunning(BackgroundService.class)) {
             Intent service = new Intent(this, BackgroundService.class);
             this.startService(service);
         }
         BackgroundService.Activity = this;
     }
 
+    private boolean isServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     private static void scheduleJob(Context context, Class jobClass, int jobID) {
         JobScheduler js = (JobScheduler) context.getSystemService(Context.JOB_SCHEDULER_SERVICE);
         JobInfo job = new JobInfo.Builder(jobID,
                 new ComponentName(context, jobClass))
-                .setRequiredNetworkType(JobInfo.NETWORK_TYPE_NOT_ROAMING)
+                .setRequiredNetworkType(JobInfo.NETWORK_TYPE_UNMETERED)
                 .build();
 
         js.schedule(job);

@@ -15,7 +15,6 @@ public class BackgroundService extends Service {
     private Timer mTimer = new Timer();
     private int mTicks;
     public static MainActivity Activity;
-    public static boolean Running = false;
 
     @Nullable
     @Override
@@ -25,7 +24,6 @@ public class BackgroundService extends Service {
 
     @Override
     public int onStartCommand(final Intent intent, int flags, int startId) {
-        Running = true;
         Toast.makeText(this, "Background service started...", Toast.LENGTH_SHORT).show();
 
         mTimer.scheduleAtFixedRate(new TimerTask() {
@@ -49,7 +47,6 @@ public class BackgroundService extends Service {
 
     @Override
     public void onDestroy() {
-        Running = false;
         Toast.makeText(this, "Background service has been forced to stop...", Toast.LENGTH_SHORT).show();
     }
 }
